@@ -1,7 +1,8 @@
-import Head from "next/head";
-import styles from './layout.module.sass'
+import Head from "next/head"
 import { ReactNode } from "react"
-import Image from "next/image"
+import Footer from "./footer"
+import Header from "./header"
+import styles from './layout.module.sass'
 export const siteTitle = "ChatPlace"
 
 interface Props {
@@ -13,18 +14,11 @@ const Layout = ({ children }: Props) =>
         <Head>
             <link rel="icon" href="/favicon.png"/>
         </Head>
-        <header className={styles.header}>
-            <Image
-                src='/favicon.png'
-                width={50}
-                height={50}
-                alt=""
-            />
-        </header>
-        <main>{children}</main>
-        <footer className={styles.footer}>
-            Este es el footer de la página
-        </footer>
+        <Header />
+        <main className={styles.main}>
+            {children}
+        </main>
+        <Footer />
     </div>
 
 export default Layout
