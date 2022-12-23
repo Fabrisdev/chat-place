@@ -3,7 +3,7 @@ import { ReactNode } from "react"
 import Footer from "./footer"
 import Header from "./header"
 import styles from './layout.module.sass'
-export const siteTitle = "ChatPlace"
+export const siteTitle = "NextChat"
 
 interface Props {
     children?: ReactNode

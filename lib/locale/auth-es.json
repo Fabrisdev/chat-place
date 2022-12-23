@@ -1,0 +1,21 @@
+{
+    "sign_in": {
+        "email_label": "Correo electrónico",
+        "email_input_placeholder": "ejemplo@tilin.com",
+        "password_label": "Contraseña",
+        "password_input_placeholder": "micontra69!",
+        "button_label": "Inicia sesión",
+        "link_text": "¿Ya tienes una cuenta? Inicia sesión"
+    },
+    "sign_up": {
+        "email_label": "Correo electrónico",
+        "email_input_placeholder": "ejemplo@tilin.com",
+        "password_label": "Contraseña",
+        "password_input_placeholder": "micontra69!",
+        "button_label": "Registrate",
+        "link_text": "¿No tienes una cuenta? Registrate ahora"
+    },
+    "forgotten_password": {
+        "link_text": "¿Olvidaste tu contraseña?"
+    }
+}

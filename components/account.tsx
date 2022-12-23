@@ -1,92 +1,79 @@
 import { useState, useEffect } from 'react'
 import { useUser, useSupabaseClient, Session } from '@supabase/auth-helpers-react'
 import { Database } from "../lib/database.types"
-import Avatar from "./avatar"
+import AvatarUpload from "./avatarUpload"
 
 type Profiles = Database['public']['Tables']['profiles']['Row']
+type ProfileReducedInfo = {
+    username: Profiles['username'],
+    website: Profiles['website'],
+    avatar_file_name: Profiles['avatar_file_name'],
+}
 
 export default function Account({ session }: { session: Session }) {
     const supabase = useSupabaseClient<Database>()
     const user = useUser()
-    //const [ userInfo, setUserInfo ] = useState<Profiles>()
+    const [ userInfo, setUserInfo ] = useState<ProfileReducedInfo>({
+        username: '',
+        website: '',
+        avatar_file_name: '',
+    })
     const [loading, setLoading] = useState(true)
-    const [username, setUsername] = useState<Profiles['username']>(null)
-    const [website, setWebsite] = useState<Profiles['website']>(null)
-    const [avatar_url, setAvatarUrl] = useState<Profiles['avatar_url']>(null)
 
     useEffect(() => {
-        getProfile()
+        void getProfile()
     }, [session])
 
     async function getProfile() {
-        try {
-            setLoading(true)
-            if (!user) throw new Error('No user')
+        setLoading(true)
+        if (!user)
+            throw new Error('No user')
 
-            let { data, error, status } = await supabase
-                .from('profiles')
-                .select(`username, website, avatar_url`)
-                .eq('id', user.id)
-                .single()
+        let { data, error, status } = await supabase
+            .from('profiles')
+            .select(`username, website, avatar_file_name`)
+            .eq('id', user.id)
+            .single()
 
-            if (error && status !== 406) {
-                throw error
-            }
+        if (error && status !== 406)
+            throw error
 
-            if (data) {
-                setUsername(data.username)
-                setWebsite(data.website)
-                setAvatarUrl(data.avatar_url)
-            }
-        } catch (error) {
-            alert('Error loading user data!')
-            console.log(error)
-        } finally {
-            setLoading(false)
-        }
+        if (data)
+            setUserInfo(data)
+
+        setLoading(false)
     }
 
-    async function updateProfile({
-                                     username,
-                                     website,
-                                     avatar_url,
-                                 }: {
-        username: Profiles['username']
-        website: Profiles['website']
-        avatar_url: Profiles['avatar_url']
-    }) {
-        try {
-            setLoading(true)
-            if (!user) throw new Error('No user')
+    async function updateProfile() {
+        setLoading(true)
+        if (!user)
+            throw new Error('No user')
 
-            const updates = {
-                id: user.id,
-                username,
-                website,
-                avatar_url,
-                updated_at: new Date().toISOString(),
-            }
-
-            let { error } = await supabase.from('profiles').upsert(updates)
-            if (error) throw error
-            alert('Profile updated!')
-        } catch (error) {
-            alert('Error updating the data!')
-            console.log(error)
-        } finally {
-            setLoading(false)
+        const updates = {
+            id: user.id,
+            ...userInfo,
+            updated_at: new Date().toISOString(),
         }
+
+        let { error } = await supabase.from('profiles').upsert(updates)
+        if (error)
+            throw error
+        alert('Profile updated!')
+        setLoading(false)
     }
 
     return (
         <div className="form-widget">
-            <Avatar
-                uid={user.id}
-                url={avatar_url}
+            <AvatarUpload
+                uid={user ? user.id : ''}
+                url={userInfo?.avatar_file_name}
                 size={150}
                 onUpload={(url) => {
-                    setAvatarUrl(url)
-                    updateProfile({ username, website, avatar_url: url })
+                    setUserInfo({
+                        ...userInfo,
+                        avatar_file_name: url
+                    })
+                    void updateProfile()
                 }}
             />
             <div>
@@ -98,8 +85,11 @@ export default function Account({ session }: { session: Session }) {
                 <input
                     id="username"
                     type="text"
-                    value={username || ''}
-                    onChange={(e) => setUsername(e.target.value)}
+                    value={userInfo?.username || ''}
+                    onChange={event => setUserInfo({
+                        ...userInfo,
+                        username: event.target.value,
+                    })}
                 />
             </div>
             <div>
@@ -107,15 +97,18 @@ export default function Account({ session }: { session: Session }) {
                 <input
                     id="website"
                     type="website"
-                    value={website || ''}
-                    onChange={(e) => setWebsite(e.target.value)}
+                    value={userInfo?.website || ''}
+                    onChange={event => setUserInfo({
+                        ...userInfo,
+                        website: event.target.value,
+                    })}
                 />
             </div>
 
             <div>
                 <button
                     className="button primary block"
-                    onClick={() => updateProfile({ username, website, avatar_url })}
+                    onClick={() => updateProfile()}
                     disabled={loading}
                 >
                     {loading ? 'Loading ...' : 'Update'}
