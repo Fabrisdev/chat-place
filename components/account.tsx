@@ -4,34 +4,35 @@ import { Database } from "../lib/database.types"
 import AvatarUpload from "./avatarUpload"
 
 type Profiles = Database['public']['Tables']['profiles']['Row']
-type ProfileReducedInfo = {
-    username: Profiles['username'],
-    website: Profiles['website'],
-    avatar_file_name: Profiles['avatar_file_name'],
-}
 
 export default function Account({ session }: { session: Session }) {
     const supabase = useSupabaseClient<Database>()
     const user = useUser()
-    const [ userInfo, setUserInfo ] = useState<ProfileReducedInfo>({
-        username: '',
-        website: '',
+    const [ userProfile, setUserProfile ] = useState<Profiles>({
+        id: '',
         avatar_file_name: '',
+        banner_url: '',
+        created_at: '',
+        updated_at: '',
+        discriminator: '',
+        reputation: 0,
+        verified: false,
+        username: '',
     })
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        void getProfile()
-    }, [session])
+        if(user)
+            getProfile()
+    }, [user])
 
     async function getProfile() {
         setLoading(true)
         if (!user)
-            throw new Error('No user')
-
-        let { data, error, status } = await supabase
+            throw 'No user'
+        const { data, error, status } = await supabase
             .from('profiles')
-            .select(`username, website, avatar_file_name`)
+            .select(`*`)
             .eq('id', user.id)
             .single()
 
@@ -39,69 +40,61 @@ export default function Account({ session }: { session: Session }) {
             throw error
 
         if (data)
-            setUserInfo(data)
-
+            setUserProfile(data)
+        else
+            setUserProfile(userProfile)
         setLoading(false)
     }
 
     async function updateProfile() {
         setLoading(true)
-        if (!user)
-            throw new Error('No user')
+        if(!userProfile) {
+            console.log("user:"+userProfile)
+            throw 'No profile data found'
+        }
 
-        const updates = {
-            id: user.id,
-            ...userInfo,
+        if(!user)
+            throw 'updateProfile was called even thought there wasnt an user'
+
+        const updatedProfile = {
+            ...userProfile,
             updated_at: new Date().toISOString(),
         }
 
-        let { error } = await supabase.from('profiles').upsert(updates)
+        if(userProfile.id === ''){
+            updatedProfile.id = user.id,
+            updatedProfile.created_at = new Date().toISOString()
+        }
+
+        console.log(JSON.stringify(userProfile))
+        const { error } = await supabase.from('profiles').upsert(updatedProfile)
         if (error)
             throw error
+
         alert('Profile updated!')
         setLoading(false)
     }
 
     return (
         <div className="form-widget">
-            <AvatarUpload
-                uid={user ? user.id : ''}
-                url={userInfo?.avatar_file_name}
-                size={150}
-                onUpload={(url) => {
-                    setUserInfo({
-                        ...userInfo,
-                        avatar_file_name: url
-                    })
-                    void updateProfile()
-                }}
-            />
+            <AvatarUpload size={100}/>
             <div>
                 <label htmlFor="email">Email</label>
-                <input id="email" type="text" value={session.user.email} disabled />
+                <input id="email" type="text" value={user?.email || ''} disabled />
             </div>
             <div>
                 <label htmlFor="username">Username</label>
                 <input
                     id="username"
                     type="text"
-                    value={userInfo?.username || ''}
-                    onChange={event => setUserInfo({
-                        ...userInfo,
-                        username: event.target.value,
-                    })}
-                />
-            </div>
-            <div>
-                <label htmlFor="website">Website</label>
-                <input
-                    id="website"
-                    type="website"
-                    value={userInfo?.website || ''}
-                    onChange={event => setUserInfo({
-                        ...userInfo,
-                        website: event.target.value,
-                    })}
+                    value={userProfile?.username || ''}
+                    onChange={event => {
+                        setUserProfile({
+                            ...userProfile,
+                            username: event.target.value,
+                            updated_at: new Date().toISOString(),
+                        })
+                    }}
                 />
             </div>
 

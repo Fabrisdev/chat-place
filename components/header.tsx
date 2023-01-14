@@ -22,7 +22,7 @@ function Header() {
                     <h2>{siteTitle}</h2>
                 </div>
             </Link>
-            <Link href='/auth'>
+            <Link href='/auth' className={styles.authLink}>
                 <Avatar
                     user={user}
                     size={40}

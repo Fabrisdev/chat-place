@@ -16,7 +16,7 @@ export default function Avatar({ size, className, user }: Props) {
 
     useEffect(() => {
         if(user)
-            void updateAvatar()
+            updateAvatar()
     }, [ user ])
 
     async function getAvatarFileName(){
@@ -35,25 +35,25 @@ export default function Avatar({ size, className, user }: Props) {
         return data?.avatar_file_name
     }
 
-    async function getAvatarUrl(path: string): Promise<string> {
-        const { data, error } = await supabase.storage.from('avatars').download(path)
-        if (error) {
-            throw error
-        }
-        return URL.createObjectURL(data)
+    async function getAvatarUrl(fileName: string){
+        const { data, error } = await supabase.storage.from('avatars').download(fileName)
+        if (error)
+            throw 'An error ocurred while trying to get the avatar url.'
+        const url = URL.createObjectURL(data)
+        return url
     }
 
     async function updateAvatar(){
-        const name = await getAvatarFileName()
-        if(name) {
-            const newAvatarUrl = await getAvatarUrl(name)
-            setAvatarUrl(newAvatarUrl)
-        }
+        const fileName = await getAvatarFileName()
+        if(!fileName)
+            return //User doesn't have an avatar set
+        const url = await getAvatarUrl(fileName)
+        setAvatarUrl(url)
     }
 
     return (
         <Image
-            src={avatarUrl ? avatarUrl : '/profile.png'}
+            src={avatarUrl || '/profile.png'}
             alt='/profile.png'
             width={size}
             height={size}

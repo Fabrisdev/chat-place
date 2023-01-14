@@ -1,82 +1,120 @@
 import React, { useEffect, useState } from 'react'
-import { useSupabaseClient } from '@supabase/auth-helpers-react'
+import {useSupabaseClient, useUser} from '@supabase/auth-helpers-react'
 import { Database } from '../lib/database.types'
+import Image from "next/image";
 type Profiles = Database['public']['Tables']['profiles']['Row']
-
-export default function AvatarUpload({
-                                   uid,
-                                   url,
-                                   size,
-                                   onUpload,
-                               }: {
-    uid: string
-    url: Profiles['avatar_file_name']
+type Props = {
     size: number
-    onUpload: (url: string) => void
-}) {
+}
+
+export default function AvatarUpload({ size }: Props) {
+    const user = useUser()
     const supabase = useSupabaseClient<Database>()
     const [avatarUrl, setAvatarUrl] = useState<Profiles['avatar_file_name']>(null)
     const [uploading, setUploading] = useState(false)
 
     useEffect(() => {
-        if (url) downloadImage(url)
-    }, [url])
+        if (user) showAvatar()
+    }, [user])
 
-    async function downloadImage(path: string) {
-        try {
-            const { data, error } = await supabase.storage.from('avatars').download(path)
-            if (error) {
-                throw error
-            }
-            const url = URL.createObjectURL(data)
-            setAvatarUrl(url)
-        } catch (error) {
-            console.log('Error downloading image: ', error)
-        }
+    async function getAvatarFileName() {
+        if(!user)
+            throw "getAvatarFileName was somehow called even thought there isn't an user available"
+
+        const {data, error} = await supabase
+            .from('profiles')
+            .select('avatar_file_name')
+            .eq('id', user.id)
+            .single()
+        if (error)
+            throw 'An error ocurred while trying to get the avatar file name.'
+        return data.avatar_file_name
     }
 
-    const uploadAvatar: React.ChangeEventHandler<HTMLInputElement> = async (event) => {
-        try {
-            setUploading(true)
+    async function getAvatarUrl(avatarFileName: string){
+        const { data, error } = await supabase.storage.from('avatars').download(avatarFileName)
+        if (error)
+            throw 'An error ocurred while trying to get the avatar url.'
+        const url = URL.createObjectURL(data)
+        return url
+    }
 
-            if (!event.target.files || event.target.files.length === 0) {
-                throw new Error('You must select an image to upload.')
-            }
+    async function showAvatar() {
+        if(!user)
+            throw "showAvatar was somehow called even thought there isn't an user available"
 
-            const file = event.target.files[0]
-            const fileExt = file.name.split('.').pop()
-            const fileName = `${uid}.${fileExt}`
-            const filePath = `${fileName}`
+        const avatarFileName = await getAvatarFileName()
 
-            let { error: uploadError } = await supabase.storage
-                .from('avatars')
-                .upload(filePath, file, { upsert: true })
+        if(!avatarFileName)
+            return //User doesn't have an avatar set
 
-            if (uploadError) {
-                throw uploadError
-            }
+        const url = await getAvatarUrl(avatarFileName)
+        setAvatarUrl(url)
+    }
 
-            onUpload(filePath)
-        } catch (error) {
-            alert('Error uploading avatar!')
-            console.log(error)
-        } finally {
-            setUploading(false)
-        }
+    const uploadAvatar: React.ChangeEventHandler<HTMLInputElement> = async event => {
+        setUploading(true)
+
+        if (!event.target.files || event.target.files.length === 0)
+            throw 'No has seleccionado ningún archivo.'
+
+        if(!user)
+            throw "getAvatar was somehow called even thought there isn't an user available"
+
+        const file = event.target.files[0]
+        console.log("file: "+file)
+        const fileExt = file.name.split('.').pop()
+        const fileName = `${user.id}.${fileExt}`
+
+        await uploadFileToStorage(file, fileName)
+        await uploadFileNameToDatabase(fileName)
+
+        setUploading(false)
+    }
+
+    async function uploadFileToStorage(file: File, fileName: string){
+        const { error } = await supabase.storage
+            .from('avatars')
+            .upload(fileName, file, { upsert: true })
+
+        if(error)
+            throw error
+    }
+
+    async function uploadFileNameToDatabase(fileName: string){
+        if(!user)
+            throw "uploadFileNameToDatabase was somehow called even thought there isn't an user available"
+
+        const { error } = await supabase
+            .from('profiles')
+            .update({
+                avatar_file_name: fileName,
+                updated_at: new Date().toISOString()
+            })
+            .eq('id', user.id)
+
+        if (error)
+            throw error
     }
 
     return (
         <div>
-            {avatarUrl ? (
-                <img
+            {avatarUrl ?
+                <Image
                     src={avatarUrl}
                     alt="AvatarUpload"
                     className="avatar image"
-                    style={{ height: size, width: size }}
+                    width={size}
+                    height={size}
                 />
-            ) : (
-                <div className="avatar no-image" style={{ height: size, width: size }} />
-            )}
+             :
+                <Image
+                    src='/profile.png'
+                    alt='/profile.png'
+                    width={size}
+                    height={size}
+                />
+            }
             <div style={{ width: size }}>
                 <label className="button primary block" htmlFor="single">
                     {uploading ? 'Uploading ...' : 'Upload'}
