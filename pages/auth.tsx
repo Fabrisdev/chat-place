@@ -12,7 +12,10 @@ export default function Authentication() {
     return(
         <Layout>
             <Head>
-                <title>{siteTitle} | Autenticación</title>
+                {session ?
+                    <title>{siteTitle} | Ajustes de usuario</title> :
+                    <title>{siteTitle} | Autenticación</title>
+                }
             </Head>
             {!session ? (
                 <Auth

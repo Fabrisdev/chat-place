@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react'
 import {useSupabaseClient, useUser} from '@supabase/auth-helpers-react'
 import { Database } from '../lib/database.types'
 import Image from "next/image";
+import avatarUpload from './avatarUpload.module.sass'
+import { AiOutlineUpload, AiOutlineLoading3Quarters } from 'react-icons/ai'
+import { Oval } from 'react-loading-icons'
 type Profiles = Database['public']['Tables']['profiles']['Row']
 type Props = {
     size: number
@@ -62,7 +65,6 @@ export default function AvatarUpload({ size }: Props) {
             throw "getAvatar was somehow called even thought there isn't an user available"
 
         const file = event.target.files[0]
-        console.log("file: "+file)
         const fileExt = file.name.split('.').pop()
         const fileName = `${user.id}.${fileExt}`
 
@@ -103,9 +105,9 @@ export default function AvatarUpload({ size }: Props) {
                 <Image
                     src={avatarUrl}
                     alt="AvatarUpload"
-                    className="avatar image"
                     width={size}
                     height={size}
+                    className={avatarUpload.avatar}
                 />
              :
                 <Image
@@ -115,9 +117,9 @@ export default function AvatarUpload({ size }: Props) {
                     height={size}
                 />
             }
-            <div style={{ width: size }}>
-                <label className="button primary block" htmlFor="single">
-                    {uploading ? 'Uploading ...' : 'Upload'}
+            <div style={{ width: size }} className={avatarUpload.selectFileButton}>
+                <label className={avatarUpload.avatarButton} htmlFor="single">
+                    {uploading ? <Oval/> : <AiOutlineUpload/>}
                 </label>
                 <input
                     style={{

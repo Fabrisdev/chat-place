@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import { useUser, useSupabaseClient, Session } from '@supabase/auth-helpers-react'
 import { Database } from "../lib/database.types"
 import AvatarUpload from "./avatarUpload"
+import Sidebar from "./sidebar";
+import account from './account.module.sass'
 
 type Profiles = Database['public']['Tables']['profiles']['Row']
 
@@ -76,42 +78,49 @@ export default function Account({ session }: { session: Session }) {
     }
 
     return (
-        <div className="form-widget">
-            <AvatarUpload size={100}/>
-            <div>
-                <label htmlFor="email">Email</label>
-                <input id="email" type="text" value={user?.email || ''} disabled />
-            </div>
-            <div>
-                <label htmlFor="username">Username</label>
-                <input
-                    id="username"
-                    type="text"
-                    value={userProfile?.username || ''}
-                    onChange={event => {
-                        setUserProfile({
-                            ...userProfile,
-                            username: event.target.value,
-                            updated_at: new Date().toISOString(),
-                        })
-                    }}
-                />
-            </div>
+        <div className={account.container}>
+            <Sidebar
+                items={['Prueba', 'Hola', 'Adios', 'Item 5', 'Item 69', 'Prueba', 'Hola', 'Adios', 'Item 5', 'Item 69', 'Prueba', 'Hola', 'Adios', 'Item 5', 'Item 69']}
+            />
+            <div className={account.userConfig}>
+                <div>
+                    <div>
+                        <label htmlFor="email">Email</label>
+                        <input id="email" type="text" value={user?.email || ''} disabled />
+                    </div>
+                    <div>
+                        <label htmlFor="username">Username</label>
+                        <input
+                            id="username"
+                            type="text"
+                            value={userProfile?.username || ''}
+                            onChange={event => {
+                                setUserProfile({
+                                    ...userProfile,
+                                    username: event.target.value,
+                                    updated_at: new Date().toISOString(),
+                                })
+                            }}
+                        />
+                    </div>
 
-            <div>
-                <button
-                    className="button primary block"
-                    onClick={() => updateProfile()}
-                    disabled={loading}
-                >
-                    {loading ? 'Loading ...' : 'Update'}
-                </button>
-            </div>
+                    <div>
+                        <button
+                            className="button primary block"
+                            onClick={() => updateProfile()}
+                            disabled={loading}
+                        >
+                            {loading ? 'Loading ...' : 'Update'}
+                        </button>
+                    </div>
 
-            <div>
-                <button className="button block" onClick={() => supabase.auth.signOut()}>
-                    Sign Out
-                </button>
+                    <div>
+                        <button className="button block" onClick={() => supabase.auth.signOut()}>
+                            Sign Out
+                        </button>
+                    </div>
+                </div>
+                <AvatarUpload size={200}/>
             </div>
         </div>
     )
