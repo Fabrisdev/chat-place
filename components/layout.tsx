@@ -1,24 +1,60 @@
 import Head from "next/head"
-import { ReactNode } from "react"
+import {ReactNode, useState} from "react"
 import Footer from "./footer"
 import Header from "./header"
 import styles from './layout.module.sass'
+import { useSession } from '@supabase/auth-helpers-react'
+import { useEffect } from 'react'
+import { Database } from '../lib/database.types'
+import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react'
+import FinishRegister from "./finishRegister";
+
 export const siteTitle = "NextChat"
 
 interface Props {
     children?: ReactNode
 }
 
-const Layout = ({ children }: Props) =>
-    <div>
-        <Head>
-            <link rel="icon" href="/favicon.png"/>
-        </Head>
-        <Header />
-        <main className={styles.main}>
-            {children}
-        </main>
-        <Footer />
-    </div>
+export default function Layout({ children }: Props) {
+    const session = useSession()
+    const supabase = useSupabaseClient<Database>()
+    const user = useUser()
+    const [ pageContent, setPageContent ] = useState(children)
 
-export default Layout
+    useEffect(() => {
+        if(!session) return
+        updatePageContent()
+
+    }, [ session ])
+
+    async function getUsernameAndDiscriminator(){
+        if(!user) return
+        const { data, error } = await supabase
+            .from('profiles')
+            .select('username, discriminator')
+            .eq('id', user.id)
+            .single()
+        if(error)
+            throw 'An error ocurred while trying to get the username and discriminator: '+error
+        return data
+    }
+
+    async function updatePageContent(){
+        const usernameAndDiscriminator = await getUsernameAndDiscriminator()
+        if(!usernameAndDiscriminator?.username || !usernameAndDiscriminator?.discriminator)
+            setPageContent(<FinishRegister/>)
+    }
+
+    return(
+        <div>
+            <Head>
+                <link rel="icon" href="/favicon.png"/>
+            </Head>
+            <Header/>
+            <main className={styles.main}>
+                {pageContent}
+            </main>
+            <Footer/>
+        </div>
+    )
+}

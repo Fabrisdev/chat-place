@@ -24,20 +24,20 @@ export default function AvatarUpload({ size }: Props) {
         if(!user)
             throw "getAvatarFileName was somehow called even thought there isn't an user available"
 
-        const {data, error} = await supabase
+        const { data, error } = await supabase
             .from('profiles')
             .select('avatar_file_name')
             .eq('id', user.id)
             .single()
         if (error)
-            throw 'An error ocurred while trying to get the avatar file name.'
+            throw 'An error ocurred while trying to get the avatar file name: ' + error
         return data.avatar_file_name
     }
 
     async function getAvatarUrl(avatarFileName: string){
         const { data, error } = await supabase.storage.from('avatars').download(avatarFileName)
         if (error)
-            throw 'An error ocurred while trying to get the avatar url.'
+            throw 'An error ocurred while trying to get the avatar url: ' + error
         const url = URL.createObjectURL(data)
         return url
     }
@@ -72,13 +72,17 @@ export default function AvatarUpload({ size }: Props) {
         await uploadFileNameToDatabase(fileName)
 
         setUploading(false)
+        console.log(
+            "%c¡Listo! Tu avatar ha sido actualizado. \n%cPuede tomar hasta 1 minuto en actualizarse completamente.",
+            "color: #5dbea3; font-size: 20px;",
+            "color: gray; font-size: 15px;"
+        )
     }
 
     async function uploadFileToStorage(file: File, fileName: string){
         const { error } = await supabase.storage
             .from('avatars')
             .upload(fileName, file, { upsert: true })
-
         if(error)
             throw error
     }
