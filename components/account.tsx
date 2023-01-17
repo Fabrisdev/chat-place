@@ -79,9 +79,6 @@ export default function Account({ session }: { session: Session }) {
 
     return (
         <div className={account.container}>
-            <Sidebar
-                items={['Prueba', 'Hola', 'Adios', 'Item 5', 'Item 69', 'Prueba', 'Hola', 'Adios', 'Item 5', 'Item 69', 'Prueba', 'Hola', 'Adios', 'Item 5', 'Item 69']}
-            />
             <div className={account.userConfig}>
                 <div>
                     <div>

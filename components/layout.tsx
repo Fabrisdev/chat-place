@@ -12,7 +12,7 @@ import FinishRegister from "./finishRegister";
 export const siteTitle = "NextChat"
 
 interface Props {
-    children?: ReactNode
+    children?: JSX.Element
 }
 
 export default function Layout({ children }: Props) {
@@ -42,7 +42,7 @@ export default function Layout({ children }: Props) {
     async function updatePageContent(){
         const usernameAndDiscriminator = await getUsernameAndDiscriminator()
         if(!usernameAndDiscriminator?.username || !usernameAndDiscriminator?.discriminator)
-            setPageContent(<FinishRegister/>)
+            setPageContent(<FinishRegister content={children}/>)
     }
 
     return(

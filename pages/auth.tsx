@@ -14,7 +14,7 @@ export default function Authentication() {
 
     useEffect(() => {
         if(session)
-            router.push('/settings')
+            router.push('/settings/general')
     }, [ session ])
 
     return(

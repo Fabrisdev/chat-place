@@ -1,14 +1,17 @@
 import finishRegister from './finishRegister.module.sass'
-export default function FinishRegister(){
-    function updateProfile(){
-        console.log("Test")
-    }
-
-    return(
+import {ReactElement, ReactNode, useState} from 'react'
+type Props = {
+    content?: JSX.Element
+}
+export default function FinishRegister({ content }: Props){
+    const [ username, setUsername ] = useState("a")
+    const [ discriminator, setDiscriminator ] = useState('#0000')
+    const [ webpageContent, setWebpageContent ] = useState(
         <div className={finishRegister.container}>
             <h1>Finalicemos tu registro</h1>
-            <p>
-                Muchas gracias por haberte registrado en el sitio, sin embargo aún quedan unos detalles del mismo por terminar.
+            <p className={finishRegister.textContainer}>
+                Muchas gracias por haberte registrado en el sitio, sin embargo aún quedan unos detalles del mismo por
+                terminar.
                 Por favor, a continuación escriba los siguientes datos:
             </p>
             <div className={finishRegister.formContainer}>
@@ -22,6 +25,26 @@ export default function FinishRegister(){
                         type='text'
                         placeholder='XxTilinGaming69_HDxX'
                         id='username-input'
+                        value='afganistan'
+                        onChange={event => {
+                                setUsername("hola")
+
+                                checkUsername()
+                            console.log("usuario: "+username)
+                            }
+                        }
+                    />
+                    <input
+                        className={finishRegister.usernameInput}
+                        type='text'
+                        placeholder='#0000'
+                        value={discriminator}
+                        onChange={event => {
+                            console.log(event.target.value)
+                                setDiscriminator(event.target.value)
+                                checkDiscriminator()
+                            }
+                        }
                     />
                 </div>
                 <button
@@ -33,4 +56,24 @@ export default function FinishRegister(){
             </div>
         </div>
     )
+    function updateProfile(){
+        setUsername("test")
+        console.log("el user: "+username)
+        if(content)
+            setWebpageContent(content)
+    }
+
+    function checkUsername(){
+        //const usernameTrimmed = username.trim()
+        //setUsername(usernameTrimmed)
+
+        //if(username.length > 32) setUsername(username.slice(0, -1))
+        setUsername("holaaaaaa")
+    }
+
+    function checkDiscriminator(){
+
+    }
+
+    return webpageContent
 }
