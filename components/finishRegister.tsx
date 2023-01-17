@@ -4,9 +4,10 @@ type Props = {
     content?: JSX.Element
 }
 export default function FinishRegister({ content }: Props){
+    const [ showContent, setShowContent ] = useState(false)
     const [ username, setUsername ] = useState("a")
     const [ discriminator, setDiscriminator ] = useState('#0000')
-    const [ webpageContent, setWebpageContent ] = useState(
+    const webpageContent =
         <div className={finishRegister.container}>
             <h1>Finalicemos tu registro</h1>
             <p className={finishRegister.textContainer}>
@@ -55,12 +56,11 @@ export default function FinishRegister({ content }: Props){
                 </button>
             </div>
         </div>
-    )
+
     function updateProfile(){
         setUsername("test")
         console.log("el user: "+username)
-        if(content)
-            setWebpageContent(content)
+        setShowContent(true)
     }
 
     function checkUsername(){
@@ -75,5 +75,7 @@ export default function FinishRegister({ content }: Props){
 
     }
 
-    return webpageContent
+    return (
+        showContent ? content : webpageContent
+    )
 }
