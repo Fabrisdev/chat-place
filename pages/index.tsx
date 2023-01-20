@@ -5,10 +5,12 @@ export default function Home() {
 
     return(
         <Layout>
-            <Head>
-                <title>{webpageTitle}</title>
-            </Head>
-            <p>Página de inicio</p>
+            <>
+                <Head>
+                    <title>{webpageTitle}</title>
+                </Head>
+                <p>Página de inicio</p>
+            </>
         </Layout>
     )
 }

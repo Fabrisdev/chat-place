@@ -12,7 +12,7 @@ import FinishRegister from "./finishRegister";
 export const siteTitle = "NextChat"
 
 interface Props {
-    children?: JSX.Element
+    children: JSX.Element
 }
 
 export default function Layout({ children }: Props) {

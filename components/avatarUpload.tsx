@@ -5,6 +5,10 @@ import Image from "next/image";
 import avatarUpload from './avatarUpload.module.sass'
 import { AiOutlineUpload, AiOutlineLoading3Quarters } from 'react-icons/ai'
 import { Oval } from 'react-loading-icons'
+import Swal from 'sweetalert2/dist/sweetalert2'
+import '@sweetalert2/theme-dark/dark.css'
+import {siteTitle} from "./layout";
+import {colors, messages, pickRandom} from "../lib/utils";
 type Profiles = Database['public']['Tables']['profiles']['Row']
 type Props = {
     size: number
@@ -72,11 +76,13 @@ export default function AvatarUpload({ size }: Props) {
         await uploadFileNameToDatabase(fileName)
 
         setUploading(false)
-        console.log(
-            "%c¡Listo! Tu avatar ha sido actualizado. \n%cPuede tomar hasta 1 minuto en actualizarse completamente.",
-            "color: #5dbea3; font-size: 20px;",
-            "color: gray; font-size: 15px;"
-        )
+        Swal.fire({
+            title: '¡Listo!',
+            text: 'Tu avatar ha sido actualizado. Puede que tome hasta un minuto en actualizarse completamente.',
+            icon: 'success',
+            confirmButtonColor: colors.confirm,
+            confirmButtonText: pickRandom(messages.accept),
+        })
     }
 
     async function uploadFileToStorage(file: File, fileName: string){
@@ -95,7 +101,6 @@ export default function AvatarUpload({ size }: Props) {
             .from('profiles')
             .update({
                 avatar_file_name: fileName,
-                updated_at: new Date().toISOString()
             })
             .eq('id', user.id)
 
