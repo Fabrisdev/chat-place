@@ -8,6 +8,7 @@ import { useEffect } from 'react'
 import { Database } from '../lib/database.types'
 import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react'
 import FinishRegister from "./finishRegister";
+import {checkIfHasAvatarOrUseDefault} from "../lib/utils";
 
 export const siteTitle = "NextChat"
 
@@ -24,7 +25,8 @@ export default function Layout({ children }: Props) {
     useEffect(() => {
         if(!session) return
         updatePageContent()
-
+        if(user)
+            checkIfHasAvatarOrUseDefault(supabase, user.id)
     }, [ session ])
 
     async function getUsernameAndDiscriminator(){

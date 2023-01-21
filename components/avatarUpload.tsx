@@ -3,12 +3,11 @@ import {useSupabaseClient, useUser} from '@supabase/auth-helpers-react'
 import { Database } from '../lib/database.types'
 import Image from "next/image";
 import avatarUpload from './avatarUpload.module.sass'
-import { AiOutlineUpload, AiOutlineLoading3Quarters } from 'react-icons/ai'
+import { AiOutlineUpload } from 'react-icons/ai'
 import { Oval } from 'react-loading-icons'
 import Swal from 'sweetalert2/dist/sweetalert2'
 import '@sweetalert2/theme-dark/dark.css'
-import {siteTitle} from "./layout";
-import {colors, messages, pickRandom} from "../lib/utils";
+import {colors, messages, pickRandom, uploadFileNameToDatabase, uploadFileToStorage} from "../lib/utils";
 type Profiles = Database['public']['Tables']['profiles']['Row']
 type Props = {
     size: number
@@ -72,8 +71,8 @@ export default function AvatarUpload({ size }: Props) {
         const fileExt = file.name.split('.').pop()
         const fileName = `${user.id}.${fileExt}`
 
-        await uploadFileToStorage(file, fileName)
-        await uploadFileNameToDatabase(fileName)
+        await uploadFileToStorage(supabase, file, fileName)
+        await uploadFileNameToDatabase(supabase, user.id, fileName)
 
         setUploading(false)
         Swal.fire({
@@ -83,29 +82,6 @@ export default function AvatarUpload({ size }: Props) {
             confirmButtonColor: colors.confirm,
             confirmButtonText: pickRandom(messages.accept),
         })
-    }
-
-    async function uploadFileToStorage(file: File, fileName: string){
-        const { error } = await supabase.storage
-            .from('avatars')
-            .upload(fileName, file, { upsert: true })
-        if(error)
-            throw error
-    }
-
-    async function uploadFileNameToDatabase(fileName: string){
-        if(!user)
-            throw "uploadFileNameToDatabase was somehow called even thought there isn't an user available"
-
-        const { error } = await supabase
-            .from('profiles')
-            .update({
-                avatar_file_name: fileName,
-            })
-            .eq('id', user.id)
-
-        if (error)
-            throw error
     }
 
     return (

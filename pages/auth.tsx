@@ -19,21 +19,23 @@ export default function Authentication() {
 
     return(
         <Layout>
-            <Head>
-                <title>{webpageTitle}</title>
-            </Head>
-            <Auth
-                supabaseClient={supabase}
-                appearance={{theme: ThemeSupa}}
-                theme="dark"
-                providers={['github', "google", "discord"]}
-                localization={{
-                    variables: {
-                        ...authLocale
+            <>
+                <Head>
+                    <title>{webpageTitle}</title>
+                </Head>
+                <Auth
+                    supabaseClient={supabase}
+                    appearance={{theme: ThemeSupa}}
+                    theme="dark"
+                    providers={['github', "google", "discord"]}
+                    localization={{
+                        variables: {
+                            ...authLocale
+                        }
                     }
                 }
-            }
-            />
+                />
+            </>
         </Layout>
     )
 }

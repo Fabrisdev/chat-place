@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useUser, useSupabaseClient, Session } from '@supabase/auth-helpers-react'
 import { Database } from "../lib/database.types"
 import AvatarUpload from "./avatarUpload"
-import Sidebar from "./sidebar";
+import Message from './message'
 import account from './account.module.sass'
 
 type Profiles = Database['public']['Tables']['profiles']['Row']
