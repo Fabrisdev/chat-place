@@ -41,6 +41,20 @@ export interface Database {
           updated_at?: string | null
         }
       }
+      "groups-participants": {
+        Row: {
+          group_id: string
+          user_id: string
+        }
+        Insert: {
+          group_id: string
+          user_id: string
+        }
+        Update: {
+          group_id?: string
+          user_id?: string
+        }
+      }
       profiles: {
         Row: {
           avatar_file_name: string | null

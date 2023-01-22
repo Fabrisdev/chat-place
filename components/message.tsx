@@ -17,7 +17,8 @@ export default function Message({ content, sentAt, userId }: Props){
     updateUsername()
     async function updateAvatarUrl(){
         const url = await getUserAvatar(supabase, userId)
-        setAvatarUrl(url)
+        if(url)
+            setAvatarUrl(url)
     }
 
     async function updateUsername(){
