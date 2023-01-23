@@ -34,9 +34,11 @@ export default function Groups(){
                         groupsInfo.length === 0 ? <li>¡No estás en ningún grupo aún!</li> :
                             groupsInfo.map(
                                 (group, key) =>
-                                    <Group key={key} name={group.name} description={group.description ?? 'Sin descripción.'}/>
+                                    <Group key={key} name={group.name} description={group.description}/>
                             )
                 }
+                <Group name='holaaa' description='esto es una desc'/>
+                <Group name='prueba #794812' description='y es que me encantas tanto si me miras mientas canto se me pone cara tonta niño tu me tienes loca'/>
             </div>
         </div>
     )

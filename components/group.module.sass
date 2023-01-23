@@ -1,38 +1,60 @@
 .container
     height: 200px
-    width: 100%
     background-color: #2b2d30
     border-top: 1px solid #000
     border-bottom: 1px solid #000
-    border-radius: 10px
+    border-radius: 5px
     display: grid
-    grid-template-columns: 2fr 6fr
+    grid-template-columns: 2fr 5fr
     background-image: url("/test-banner.jpg")
+    background-repeat: no-repeat
+    background-size: cover
     overflow: hidden
     gap: 20px
+    margin: 20px
 
 .infoContainer
-    padding-top: 10px
-
+    padding-top: 0
+    padding-bottom: 10px
+    display: flex
+    flex-direction: column
+    padding-right: 20px
+    justify-content: space-between
+    background-color: #0009
 
 .joinChatButton
     font-size: 1.5em
-    padding: 5px 225px 5px 225px
-    background-color: #dd7973
-    border: 1px solid #fff
-    color: #000
-    border-radius: 10px
-    margin-top: 60px
-    box-shadow: 0 0 20px 10px
+    padding: 5px
+    background-color: #04ab4b
+    border: 2px solid #fff
+    border-radius: 5px
+    color: #fff
+    font-family: 'Roboto', Arial, serif
+    font-weight: bolder
     transition: 0.3s
 
 .joinChatButton:hover
-    background-color: rgba(221, 121, 115, 0.85)
+    background-color: #00963f
     color: #fff
+    box-shadow: 0 0 15px 5px #000
     cursor: pointer
 
 .text
-    font-size: 1.35em
-    background-color: #0006
+    font-size: 1.6em
+    font-weight: bolder
     padding: 5px
     border-radius: 15px
+    font-family: 'Roboto', Arial, serif
+
+.small
+    font-size: 1.20em
+    font-weight: normal
+
+.title
+    text-align: center
+    font-family: 'Montserrat', Arial, serif
+    font-size: 2.25em
+
+.serverAvatar
+    width: 100%
+    object-fit: cover

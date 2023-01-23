@@ -10,7 +10,6 @@ export default function MyGroups(){
                 <Head>
                     <title>{webpageTitle}</title>
                 </Head>
-                <p>Tus grupos:</p>
                 <Groups/>
             </>
         </Layout>

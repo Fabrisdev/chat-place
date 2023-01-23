@@ -10,7 +10,7 @@ function Header() {
 
     return(
         <header className={styles.header}>
-            <Link href='/'>
+            <Link href='/' className={styles.logoLink}>
                 <div className={styles.logoContainer}>
                     <Image
                         src='/favicon.png'
