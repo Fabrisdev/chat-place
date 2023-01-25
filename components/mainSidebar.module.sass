@@ -7,7 +7,7 @@
     left: 0
     transition: 0.2s
     animation: 0.3s ease-out 0s 1 slideFromLeft
-    padding: 55px 0 0 10px
+    padding: 55px 10px 0 10px
     border-right: 1px solid #555555
 
 .logo
@@ -21,13 +21,29 @@
     100%
         transform: translateX(0)
 
-.container div:not(:first-child)
+@keyframes close
+    0%
+        transform: translateX(0)
+    100%
+        transform: translateX(-100%)
+
+.container a:not(:first-child)
     display: flex
     align-items: center
     gap: 20px
+    transition: 0.2s
+    cursor: pointer
+    padding: 5px
 
-.container div *:first-child
-    font-size: 30px
+.container a *:first-child
+    font-size: 25px
 
-.container div *:last-child
+.container a:not(:first-child):hover
+    background-color: #2b2d30
+    border-radius: 5px
+
+.container a *:last-child
     font-size: 20px
+
+.closeAnimation
+    animation: 0.3s ease-out 0s 1 close

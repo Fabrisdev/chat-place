@@ -5,47 +5,31 @@ import { RiHome4Line } from 'react-icons/ri'
 import Link from 'next/link'
 import { GoSettings } from 'react-icons/go'
 import Separator from './separator'
-export default function MainSidebar(){
+import { AiFillGithub } from 'react-icons/ai'
+type Props = {
+    cssClass?: string
+}
+export default function MainSidebar({ cssClass }: Props){
     return(
-        <div className={css.container}>
+        <div className={`${css.container} ${cssClass}`}>
             <Logo myStyles={css.logo}/>
-            <div>
+            <Link href='/'>
                 <RiHome4Line/>
-                <Link href='/'>
-                    <p>Inicio</p>
-                </Link>
-            </div>
-            <div>
+                <p>Inicio</p>
+            </Link>
+            <Link href='/mygroups'>
                 <HiUserGroup/>
-                <Link href='/mygroups'>
-                    <p>Mis grupos</p>
-                </Link>
-            </div>
-            <div>
+                <p>Mis grupos</p>
+            </Link>
+            <Link href='/settings/general'>
                 <GoSettings/>
-                <Link href='/settings/general'>
-                    <p>Ajustes</p>
-                </Link>
-            </div>
+                <p>Ajustes</p>
+            </Link>
             <Separator/>
-            <div>
-                <RiHome4Line/>
-                <Link href='/'>
-                    <p>Inicio</p>
-                </Link>
-            </div>
-            <div>
-                <HiUserGroup/>
-                <Link href='/mygroups'>
-                    <p>Mis grupos</p>
-                </Link>
-            </div>
-            <div>
-                <GoSettings/>
-                <Link href='/settings/general'>
-                    <p>Ajustes</p>
-                </Link>
-            </div>
+            <a href='https://github.com/Fabrisdev/chat-place' target="_blank" rel="noreferrer">
+                <AiFillGithub/>
+                <p>Ver en github</p>
+            </a>
         </div>
     )
 }

@@ -1,10 +1,15 @@
 import group from './group.module.sass'
 import Image from 'next/image'
+import {useRouter} from 'next/router'
 type Props = {
     name: string,
-    description: string | null
+    description: string | null,
+    id: string
 }
-export default function Group({ name, description }: Props){
+export default function Group({ id, name, description }: Props){
+    const router = useRouter()
+    const query = router.query
+    const pageToSend = `/groups/${id}`
     return(
         <div className={group.container}>
             <Image
@@ -19,7 +24,12 @@ export default function Group({ name, description }: Props){
                     <p className={`${group.text} ${group.title}`}>{name}</p>
                     <p className={`${group.text} ${group.small}`}>{description ?? 'Sin descripción.'}</p>
                 </div>
-                <button className={group.joinChatButton}>Ir al chat</button>
+                <button
+                    className={group.joinChatButton}
+                    onClick={() => router.push(pageToSend)}
+                >
+                    Ir al chat
+                </button>
             </div>
         </div>
     )

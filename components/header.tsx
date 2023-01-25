@@ -6,19 +6,29 @@ import { FaBars } from 'react-icons/fa'
 import {useState} from "react";
 import MainSidebar from "./mainSidebar";
 import Logo from './logo'
-function Header() {
+import sidebarStyles from './mainSidebar.module.sass'
+export default function Header() {
     const user = useUser()
-    const [sidebarOpened, setSidebarOpened ] = useState(false)
-    function handleSidebarClick(){
-        setSidebarOpened(!sidebarOpened)
+    const [showSidebar, setShowSidebar ] = useState(false)
+    const [ showCloseAnimation, setShowCloseAnimation ] = useState(true)
+    const [ canTouch, setCanTouch ] = useState(true)
+    async function handleSidebarClick(){
+        if(showSidebar)
+            await new Promise(r => setTimeout(r, 300))
+        setShowSidebar(!showSidebar)
     }
 
     return(
         <header className={styles.header}>
-            {
-                sidebarOpened ? <MainSidebar/> : ''
+            { showSidebar && <MainSidebar cssClass={showCloseAnimation ? sidebarStyles.closeAnimation : ''}/> }
+            <FaBars className={`${styles.barsIcon} ${showSidebar ? styles.barsIconOpened : ''}`} onClick={async () => {
+                if(!canTouch) return
+                setShowCloseAnimation(!showCloseAnimation)
+                setCanTouch(false)
+                await handleSidebarClick()
+                setCanTouch(true)
             }
-            <FaBars className={`${styles.barsIcon} ${sidebarOpened ? styles.barsIconOpened : ''}`} onClick={handleSidebarClick}/>
+            }/>
             <Logo/>
             <Link href='/auth' className={styles.authLink}>
                 <Avatar
@@ -30,4 +40,3 @@ function Header() {
         </header>
     )
 }
-export default Header

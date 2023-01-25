@@ -23,7 +23,7 @@ export default function General(){
                     <title>{webpageTitle}</title>
                 </Head>
                 { session ?
-                    <Account session={session} />
+                    <Account/>
                     :
                     <h3>Esta página es solo para usuarios que han iniciado sesión.</h3>
                 }

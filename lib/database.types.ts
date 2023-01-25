@@ -55,6 +55,26 @@ export interface Database {
           user_id?: string
         }
       }
+      messages: {
+        Row: {
+          content: string
+          group_id: string
+          sent_at: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          group_id: string
+          sent_at?: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          group_id?: string
+          sent_at?: string
+          user_id?: string
+        }
+      }
       profiles: {
         Row: {
           avatar_file_name: string | null
