@@ -15,6 +15,11 @@ function App({
   return (
       <SessionContextProvider supabaseClient={supabase} initialSession={pageProps.initialSession}>
         <Component {...pageProps} />
+          <style jsx global>{`
+            #__next{
+              height: 100%;      
+            }
+        `}</style>
       </SessionContextProvider>
   )
 }

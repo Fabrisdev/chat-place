@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react'
-import { useUser, useSupabaseClient, Session } from '@supabase/auth-helpers-react'
+import { useUser, useSupabaseClient } from '@supabase/auth-helpers-react'
 import { Database } from "../lib/database.types"
 import AvatarUpload from "./avatarUpload"
-import Message from './message'
 import account from './account.module.sass'
 
 type Profiles = Database['public']['Tables']['profiles']['Row']
 
-export default function Account({ session }: { session: Session }) {
+export default function Account() {
     const supabase = useSupabaseClient<Database>()
     const user = useUser()
     const [ userProfile, setUserProfile ] = useState<Profiles>({
@@ -64,7 +63,7 @@ export default function Account({ session }: { session: Session }) {
         }
 
         if(userProfile.id === ''){
-            updatedProfile.id = user.id,
+            updatedProfile.id = user.id
             updatedProfile.created_at = new Date().toISOString()
         }
 

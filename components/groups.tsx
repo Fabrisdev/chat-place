@@ -39,6 +39,7 @@ export default function Groups(){
                 }
                 <Group name='holaaa' description='esto es una desc'/>
                 <Group name='prueba #794812' description='y es que me encantas tanto si me miras mientas canto se me pone cara tonta niño tu me tienes loca'/>
+                <Group name='prueba #794812' description='y es que me encantas tanto si me miras mientas canto se me pone cara tonta niño tu me tienes loca'/>
             </div>
         </div>
     )

@@ -1,0 +1,33 @@
+.container
+    position: absolute
+    width: 300px
+    height: 100%
+    background-color: black
+    top: 0
+    left: 0
+    transition: 0.2s
+    animation: 0.3s ease-out 0s 1 slideFromLeft
+    padding: 55px 0 0 10px
+    border-right: 1px solid #555555
+
+.logo
+    position: absolute
+    top: 5px
+    left: 60px
+
+@keyframes slideFromLeft
+    0%
+        transform: translateX(-100%)
+    100%
+        transform: translateX(0)
+
+.container div:not(:first-child)
+    display: flex
+    align-items: center
+    gap: 20px
+
+.container div *:first-child
+    font-size: 30px
+
+.container div *:last-child
+    font-size: 20px

@@ -1,0 +1,60 @@
+.container
+    font-family: 'Roboto', Arial, serif
+    display: flex
+    flex-direction: column
+    justify-content: center
+    align-items: center
+    height: 100%
+    padding: 40px
+    gap: 40px
+    background-image: url('/blob-scene-haikei.svg')
+    background-repeat: no-repeat
+    background-size: cover
+
+.goBack
+    font-weight: bolder
+    font-size: 2em
+    text-align: center
+    color: #2e85ff
+    transition: 0.2s
+
+.goBack:hover
+    color: #448efc
+
+.codeError
+    font-size: 8em
+    font-weight: bolder
+    font-family: 'Montserrat', Arial, serif
+
+.textContainer
+    width: 50%
+
+@media only screen and (max-width: 975px)
+    .textContainer
+        width: 70%
+
+@media only screen and (max-width: 716px)
+    .textContainer
+        width: 90%
+
+@media only screen and (max-width: 576px)
+    .textContainer
+        width: 100%
+
+@media only screen and (max-width: 526px)
+    .container
+        padding: 20px
+
+    .goBack
+        color: #f44
+
+    .goBack:hover
+        color: #000
+
+@media only screen and (max-width: 336px)
+    .codeError
+        font-size: 7em
+
+@media only screen and (max-width: 298px)
+    .codeError
+        font-size: 6em

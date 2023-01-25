@@ -1,0 +1,39 @@
+.header
+    background-color: #000
+    display: grid
+    grid-template-columns: 1fr 1fr 1fr
+    align-items: center
+    justify-content: center
+    height: 50px
+    border-bottom: 1px solid #fff5
+    padding: 0 10px
+
+.logoLink
+    grid-column-start: 2
+
+.logoContainer
+    display: flex
+    justify-content: center
+    align-items: center
+    gap: 5px
+
+.authLink
+    width: 40px
+    height: 40px
+    justify-self: flex-end
+    grid-column-start: 3
+
+.profile
+    transition: 0.5s
+    border-radius: 50%
+
+.profile:hover
+    rotate: 180deg
+
+.barsIcon
+    font-size: 30px
+    cursor: pointer
+    transition: 0.2s
+
+.barsIconOpened
+    rotate: 90deg

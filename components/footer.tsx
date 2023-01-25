@@ -1,4 +1,4 @@
-import styles from "./layout.module.sass";
+import styles from "./footer.module.sass";
 import Image from "next/image";
 
 const Footer = () =>

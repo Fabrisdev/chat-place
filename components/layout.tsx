@@ -1,5 +1,4 @@
-import Head from "next/head"
-import {ReactNode, useState} from "react"
+import {useState} from "react"
 import Footer from "./footer"
 import Header from "./header"
 import styles from './layout.module.sass'
@@ -48,14 +47,13 @@ export default function Layout({ children }: Props) {
     }
 
     return(
-        <div>
-            <Head>
-                <link rel="icon" href="/favicon.png"/>
-            </Head>
-            <Header/>
-            <main className={styles.main}>
-                {pageContent}
-            </main>
+        <div className={styles.layout}>
+            <div>
+                <Header/>
+                <main className={styles.main}>
+                    {pageContent}
+                </main>
+            </div>
             <Footer/>
         </div>
     )
