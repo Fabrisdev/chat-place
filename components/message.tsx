@@ -1,8 +1,9 @@
 import {useSupabaseClient} from "@supabase/auth-helpers-react";
 import { Database } from '../lib/database.types'
-import {useEffect, useState} from "react";
-import {getAvatarUrl, getUserAvatar, getUserUsernameAndDiscriminator} from "../lib/utils";
+import {useState} from "react";
+import {getUserAvatar, getUserUsernameAndDiscriminator} from "../lib/utils";
 import Image from 'next/image'
+import css from './message.module.sass'
 
 type Props = {
     content: string,
@@ -27,13 +28,15 @@ export default function Message({ content, sentAt, userId }: Props){
     }
 
     return(
-        <div>
-            <div>
+        <div className={css.container}>
+            <div className={css.profileContainer}>
                 <p>{username}</p>
                 <Image src={avatarUrl} alt='/profile.png' width={200} height={200}/>
             </div>
-            <p>{content}</p>
-            <p>{sentAt}</p>
+            <div className={css.messageContainer}>
+                <p>{content}</p>
+                <p className={css.sentAt}>{sentAt}</p>
+            </div>
         </div>
     )
 }
