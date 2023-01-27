@@ -1,7 +1,7 @@
-import {useSupabaseClient} from "@supabase/auth-helpers-react";
+import {useSupabaseClient} from "@supabase/auth-helpers-react"
 import { Database } from '../lib/database.types'
-import {useState} from "react";
-import {getUserAvatar, getUserUsernameAndDiscriminator} from "../lib/utils";
+import { useState } from "react"
+import { getUserAvatar, getUserUsernameAndDiscriminator } from "../lib/utils"
 import Image from 'next/image'
 import css from './message.module.sass'
 
@@ -14,8 +14,10 @@ export default function Message({ content, sentAt, userId }: Props){
     const supabase = useSupabaseClient<Database>()
     const [ avatarUrl, setAvatarUrl ] = useState('/profile.png')
     const [ username, setUsername ] = useState('...')
+
     updateAvatarUrl()
     updateUsername()
+
     async function updateAvatarUrl(){
         const url = await getUserAvatar(supabase, userId)
         if(url)

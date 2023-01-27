@@ -19,7 +19,7 @@ export default function Layout({ children }: Props) {
     const session = useSession()
     const supabase = useSupabaseClient<Database>()
     const user = useUser()
-    const [ pageContent, setPageContent ] = useState(children)
+    const [ shouldShowContent, setShouldShowContent ] = useState(true)
 
     useEffect(() => {
         if(!session) return
@@ -43,7 +43,7 @@ export default function Layout({ children }: Props) {
     async function updatePageContent(){
         const usernameAndDiscriminator = await getUsernameAndDiscriminator()
         if(!usernameAndDiscriminator?.username || !usernameAndDiscriminator?.discriminator)
-            setPageContent(<FinishRegister content={children}/>)
+            setShouldShowContent(false)
     }
 
     return(
@@ -51,7 +51,9 @@ export default function Layout({ children }: Props) {
             <div>
                 <Header/>
                 <main className={styles.main}>
-                    {pageContent}
+                    { shouldShowContent ?
+                        children : <FinishRegister onFinished={() => setShouldShowContent(true)}/>
+                    }
                 </main>
             </div>
             <Footer/>

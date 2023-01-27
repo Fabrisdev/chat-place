@@ -1,12 +1,13 @@
 import Layout from '../../components/layout'
 import { Database } from '../../lib/database.types'
 import Message from '../../components/message'
-import {createServerSupabaseClient} from '@supabase/auth-helpers-nextjs'
+import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs'
 import { GetServerSidePropsContext } from 'next'
 import Head from 'next/head'
 import { siteTitle } from '../../components/layout'
-import {useSupabaseClient} from "@supabase/auth-helpers-react"
-import {useState} from "react"
+import {useSupabaseClient, useUser} from "@supabase/auth-helpers-react"
+import { useState } from "react"
+import SendMessageBox from "../../components/sendmessagebox";
 
 type Props = {
     groupName: string,
@@ -22,6 +23,7 @@ export default function GroupPage({ groupName, oldMessages }: Props){
     const webpageTitle = `${siteTitle} | ${groupName}`
     const supabase = useSupabaseClient<Database>()
     const [ messages, setMessages ] = useState<Message[]>(oldMessages)
+    const user = useUser()
 
     supabase
         .channel('public:messages')
@@ -46,9 +48,16 @@ export default function GroupPage({ groupName, oldMessages }: Props){
                 </Head>
                 {
                     messages.map(
-                        message => <Message key={message.sent_at} content={message.content} sentAt={message.sent_at} userId={message.user_id}/>
+                        message =>
+                            <Message
+                                key={(Math.random() + 1).toString().substring(7)}
+                                content={message.content}
+                                sentAt={message.sent_at}
+                                userId={message.user_id}
+                            />
                     )
                 }
+                <SendMessageBox id={user?.id}/>
             </>
         </Layout>
     )
@@ -56,7 +65,7 @@ export default function GroupPage({ groupName, oldMessages }: Props){
 
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     const supabase = createServerSupabaseClient<Database>(ctx)
-    const {id} = ctx.query
+    const { id } = ctx.query
     const messagesData = await getMessages()
     if (!messagesData) return sendTo('/mygroups')
     const groupName = await getGroupName()

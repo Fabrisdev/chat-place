@@ -8,17 +8,16 @@ import {useSupabaseClient, useUser} from "@supabase/auth-helpers-react";
 import { siteTitle} from './layout'
 
 type Props = {
-    content: JSX.Element
+    onFinished: () => void
 }
-export default function FinishRegister({ content }: Props){
+export default function FinishRegister({ onFinished }: Props){
     const user = useUser()
     const supabase = useSupabaseClient<Database>()
-    const [ showContent, setShowContent ] = useState(false)
     const [ username, setUsername ] = useState('')
     const [ discriminator, setDiscriminator ] = useState('#0000')
     const [ usernameWarningOcurred, setUsernameWarningOcurred ] = useState(false)
     const [ usernameErrorOcurred, setUsernameErrorOcurred ] = useState(false)
-    const webpageContent =
+    return(
         <div className={finishRegister.container}>
             <h1>Finalicemos tu registro</h1>
             <p className={finishRegister.textContainer}>
@@ -66,7 +65,7 @@ export default function FinishRegister({ content }: Props){
                 </button>
             </div>
         </div>
-
+    )
     async function updateProfile(){
         const usernameTrimmed = username.trim()
         if(username !== usernameTrimmed) {
@@ -121,7 +120,7 @@ export default function FinishRegister({ content }: Props){
             confirmButtonColor: colors.confirm,
             confirmButtonText: pickRandom(messages.accept),
         })
-        setShowContent(true)
+        onFinished()
     }
 
     async function updateInfoOnDatabase(){
@@ -153,6 +152,4 @@ export default function FinishRegister({ content }: Props){
                 if(isNaN(Number(newDiscriminator[i]))) return
         setDiscriminator(newDiscriminator)
     }
-
-    return showContent ? content : webpageContent
 }
