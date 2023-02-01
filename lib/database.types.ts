@@ -78,7 +78,7 @@ export interface Database {
       profiles: {
         Row: {
           avatar_file_name: string | null
-          banner_url: string | null
+          banner_file_name: string | null
           created_at: string
           discriminator: string | null
           id: string
@@ -89,7 +89,7 @@ export interface Database {
         }
         Insert: {
           avatar_file_name?: string | null
-          banner_url?: string | null
+          banner_file_name?: string | null
           created_at?: string
           discriminator?: string | null
           id: string
@@ -100,7 +100,7 @@ export interface Database {
         }
         Update: {
           avatar_file_name?: string | null
-          banner_url?: string | null
+          banner_file_name?: string | null
           created_at?: string
           discriminator?: string | null
           id?: string
@@ -115,7 +115,14 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      is_valid_descriminator: {
+        Args: { discriminator: string }
+        Returns: boolean
+      }
+      is_valid_discriminator: {
+        Args: { "": string }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never

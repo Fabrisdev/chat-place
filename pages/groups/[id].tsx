@@ -5,39 +5,43 @@ import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs'
 import { GetServerSidePropsContext } from 'next'
 import Head from 'next/head'
 import { siteTitle } from '../../components/layout'
-import {useSupabaseClient, useUser} from "@supabase/auth-helpers-react"
+import {useSupabaseClient} from "@supabase/auth-helpers-react"
 import { useState } from "react"
 import SendMessageBox from "../../components/sendmessagebox";
 
 type Props = {
     groupName: string,
-    oldMessages: Message[]
+    oldMessages: Message[],
+    groupId: string
 }
 type Message = {
     content: string,
     group_id: string,
     sent_at: string,
-    user_id: string
+    user_id: string,
 }
-export default function GroupPage({ groupName, oldMessages }: Props){
+export default function GroupPage({ groupName, oldMessages, groupId }: Props){
     const webpageTitle = `${siteTitle} | ${groupName}`
     const supabase = useSupabaseClient<Database>()
     const [ messages, setMessages ] = useState<Message[]>(oldMessages)
-    const user = useUser()
 
     supabase
         .channel('public:messages')
         .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, payload => {
             const { content, sent_at, group_id, user_id } = payload.new
+            if(groupId !== group_id) return
+            const date = new Date(sent_at)
+            const dateFormated = new Intl.DateTimeFormat('es', {
+                dateStyle: 'long',
+                timeStyle: 'medium',
+            }).format(date)
             const message = {
                 content,
-                sent_at,
+                sent_at: dateFormated,
                 group_id,
                 user_id,
             }
             setMessages(messages => [...messages, message])
-            console.log('ya? xd')
-            console.log(payload.new)
         }).subscribe()
 
     return(
@@ -57,7 +61,7 @@ export default function GroupPage({ groupName, oldMessages }: Props){
                             />
                     )
                 }
-                <SendMessageBox id={user?.id}/>
+                <SendMessageBox groupId={groupId}/>
             </>
         </Layout>
     )
@@ -76,6 +80,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
         props: {
             oldMessages: modifiedMessagesData,
             groupName: groupName.name,
+            groupId: id,
         }
     }
 

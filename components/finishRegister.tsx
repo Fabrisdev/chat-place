@@ -15,8 +15,6 @@ export default function FinishRegister({ onFinished }: Props){
     const supabase = useSupabaseClient<Database>()
     const [ username, setUsername ] = useState('')
     const [ discriminator, setDiscriminator ] = useState('#0000')
-    const [ usernameWarningOcurred, setUsernameWarningOcurred ] = useState(false)
-    const [ usernameErrorOcurred, setUsernameErrorOcurred ] = useState(false)
     return(
         <div className={finishRegister.container}>
             <h1>Finalicemos tu registro</h1>
@@ -32,15 +30,14 @@ export default function FinishRegister({ onFinished }: Props){
                         Nombre de usuario:
                     </label>
                     <input
-                        className={`${finishRegister.usernameInput} ${usernameWarningOcurred ? finishRegister.usernameWarning : ''} ${usernameErrorOcurred ? finishRegister.usernameError : ''}`}
+                        className={finishRegister.usernameInput}
                         type='text'
                         placeholder='XxTilinGaming69_HDxX'
                         id='username-input'
                         maxLength={32}
                         value={username}
                         onChange={event => {
-                                console.log(event.target.value)
-                                checkUsername(event.target.value)
+                                setUsername(event.target.value)
 
                             }
                         }
@@ -103,7 +100,8 @@ export default function FinishRegister({ onFinished }: Props){
             })
             return
         }
-        const wasSent = await updateInfoOnDatabase()
+        const discriminatorWithoutHashtag = discriminator.split('#')[1]
+        const wasSent = await updateInfoOnDatabase(discriminatorWithoutHashtag)
         if(!wasSent){
             Swal.fire({
                 title: pickRandom(messages.error),
@@ -123,30 +121,22 @@ export default function FinishRegister({ onFinished }: Props){
         onFinished()
     }
 
-    async function updateInfoOnDatabase(){
+    async function updateInfoOnDatabase(discriminatorWithoutHashtag: string){
         if(!user)
             return false
         const { error } = await supabase
             .from('profiles')
             .update({
                 username,
-                discriminator,
+                discriminator: discriminatorWithoutHashtag,
             })
             .eq('id', user.id)
-        if(error)
-            return false
-        return true
-    }
-
-    function checkUsername(newUsername: string){
-        /*if(newUsername.length > 32) newUsername = username.slice(0, -1)*/
-        setUsername(newUsername)
+        return !error
     }
 
     function checkDiscriminator(newDiscriminator: string){
         if(!newDiscriminator.startsWith('#')) return
         newDiscriminator = newDiscriminator.trim()
-        //if(newDiscriminator.length !== 5) return esto al tocar el boton
         if(newDiscriminator.length >= 2)
             for(let i = 1; i <= newDiscriminator.length - 1; i++)
                 if(isNaN(Number(newDiscriminator[i]))) return

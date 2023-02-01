@@ -26,7 +26,7 @@ export default function Message({ content, sentAt, userId }: Props){
 
     async function updateUsername(){
         const { username, discriminator } = await getUserUsernameAndDiscriminator(supabase, userId)
-        setUsername(`${username}${discriminator}`)
+        setUsername(`${username}#${discriminator}`)
     }
 
     return(

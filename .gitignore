@@ -36,4 +36,3 @@ yarn-error.log*
 next-env.d.ts
 
 .auto-gen-types.sh
-.db-structure.js
