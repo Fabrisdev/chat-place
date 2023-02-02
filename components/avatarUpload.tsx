@@ -102,7 +102,10 @@ export default function AvatarUpload({ size }: Props) {
                     height={size}
                 />
             }
-            <div style={{ width: size }} className={avatarUpload.selectFileButton}>
+            <div style={{
+                width: size,
+                height: size,
+            }} className={avatarUpload.selectFileButton}>
                 <label className={avatarUpload.avatarButton} htmlFor="single">
                     {uploading ? <Oval/> : <AiOutlineUpload/>}
                 </label>

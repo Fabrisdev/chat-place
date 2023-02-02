@@ -12,7 +12,7 @@ export default function Account() {
     const [ userProfile, setUserProfile ] = useState<Profiles>({
         id: '',
         avatar_file_name: '',
-        banner_url: '',
+        banner_file_name: '',
         created_at: '',
         updated_at: '',
         discriminator: '',
