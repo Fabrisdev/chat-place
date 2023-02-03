@@ -24,7 +24,6 @@
 .aboutMeTitle
     background-color: #00A36C
     padding: 5px
-    border: 1px solid #fff
     border-left: 5px solid #fff
 
 .avatarContainer
@@ -52,17 +51,17 @@
 .statusContainer
     grid-column: 1 / span 2
     display: flex
+    flex-direction: column
+    gap: 5px
 
 .statusTitle
     background-color: #00A36C
-    writing-mode: vertical-rl
-    border: 1px solid #fff
-    border-top: 5px solid #fff
-    padding-top: 5px
+    border-left: 5px solid #fff
+    padding-left: 5px
 
 .status
     width: 100%
-    height: 150px
+    height: 50px
     background-color: #2b2d30
     border: 1px solid #555555
     border-radius: 5px
@@ -70,3 +69,27 @@
     font-size: 20px
     color: #fff
     padding: 5px
+
+.statusTitleContainer
+    display: flex
+    justify-content: space-between
+    align-items: center
+    background-color: #00A36C
+    border: 1px solid #fff
+
+.confirmContainer
+    display: flex
+    background-color: #ff4444
+    height: 100%
+    padding: 5px 10px 5px 10px
+    justify-content: center
+    align-items: center
+    font-size: 20px
+    gap: 7px
+    border-left: 1px solid #fff
+
+.rotateOnHover:hover
+    transform: rotateX(180deg)
+
+.icon
+    transition: 0.5s

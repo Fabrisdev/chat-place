@@ -1,7 +1,12 @@
 import sidebar from './sidebar.module.sass'
 import Link from 'next/link'
+type Item = {
+    name: string,
+    link: string,
+}
+
 type Props = {
-    items: string[][]
+    items: Item[]
 }
 export default function Sidebar({ items }: Props){
     return(
@@ -11,8 +16,8 @@ export default function Sidebar({ items }: Props){
                     <li
                         className={sidebar.listItem}
                         key={key}>
-                        <Link href={item[1]}>
-                        {item[0]}
+                        <Link href={item.link}>
+                            {item.name}
                         </Link>
                     </li>
                 )

@@ -5,6 +5,8 @@ import {colors, messages, pickRandom} from "../lib/utils"
 import '@sweetalert2/theme-dark/dark.css'
 import {useUser, useSupabaseClient} from "@supabase/auth-helpers-react"
 import {Database} from "../lib/database.types"
+import { KeyboardEvent } from "react"
+
 type Props = {
     groupId: string
 }
@@ -13,7 +15,9 @@ export default function SendMessageBox({ groupId }: Props){
     const user = useUser()
     const supabase = useSupabaseClient<Database>()
 
+
     async function handleSendMessage(){
+        const messageToSend = content.trim()
         if(!user) return Swal.fire({
             title: pickRandom(messages.error),
             text: 'Necesitas iniciar sesión para publicar mensajes.',
@@ -21,16 +25,9 @@ export default function SendMessageBox({ groupId }: Props){
             confirmButtonColor: colors.confirm,
             confirmButtonText: pickRandom(messages.accept),
         })
-        if(content.length === 0) return Swal.fire({
+        if(messageToSend.length === 0) return Swal.fire({
             title: pickRandom(messages.error),
             text: 'Escribe algo más largo, ¿no?',
-            icon: 'error',
-            confirmButtonColor: colors.confirm,
-            confirmButtonText: pickRandom(messages.accept),
-        })
-        if(content.length > 200) return Swal.fire({
-            title: pickRandom(messages.error),
-            text: 'Limito el tamaño de los mensajes a 200 caracteres. ¡A nadie le interesa tu copy pasta!',
             icon: 'error',
             confirmButtonColor: colors.confirm,
             confirmButtonText: pickRandom(messages.accept),
@@ -48,21 +45,28 @@ export default function SendMessageBox({ groupId }: Props){
         }
     }
 
+    async function handleKeyDown(event: KeyboardEvent<HTMLTextAreaElement>){
+        const { key } = event
+        if(key !== 'Enter') return
+        if(event.shiftKey) {
+            //TODO: set rows to 1 more and add next line in message content
+            return
+        }
+        setTimeout(() => handleSendMessage(), 10)
+
+    }
+
     return(
         <div className={css.container}>
             <textarea
                 className={css.messageBox}
-                rows={5}
+                rows={1}
+                maxLength={200}
                 placeholder='Escriba un mensaje'
                 value={content}
                 onChange={event => { setContent(event.target.value) }}
+                onKeyDown={event => handleKeyDown(event)}
             />
-            <button
-                onClick={handleSendMessage}
-                className={css.button}
-            >
-                Publicar mensaje
-            </button>
         </div>
     )
 }

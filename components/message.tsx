@@ -31,13 +31,13 @@ export default function Message({ content, sentAt, userId }: Props){
 
     return(
         <div className={css.container}>
-            <div className={css.profileContainer}>
-                <p>{username}</p>
-                <Image src={avatarUrl} alt='/profile.png' width={200} height={200}/>
-            </div>
+            <Image src={avatarUrl} alt='/profile.png' width={60} height={60} className={css.avatar}/>
             <div className={css.messageContainer}>
-                <p>{content}</p>
-                <p className={css.sentAt}>{sentAt}</p>
+                <div className={css.messageHeaderContainer}>
+                    <p className={css.textHeader}>{username}</p>
+                    <p className={css.textHeader}>{sentAt}</p>
+                </div>
+                <p className={css.text}>{content}</p>
             </div>
         </div>
     )

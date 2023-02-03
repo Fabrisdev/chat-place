@@ -8,6 +8,7 @@ import { Database } from '../lib/database.types'
 import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react'
 import FinishRegister from "./finishRegister";
 import {checkIfHasAvatarOrUseDefault} from "../lib/utils";
+import {MdOutlineFullscreenExit} from "react-icons/md";
 
 export const siteTitle = "NextChat"
 
@@ -20,6 +21,7 @@ export default function Layout({ children }: Props) {
     const supabase = useSupabaseClient<Database>()
     const user = useUser()
     const [ shouldShowContent, setShouldShowContent ] = useState(true)
+    const [ fullScreenOn, setFullScreenOn ] = useState(false) //this will change soon as I2 add it to the settings as an option
 
     useEffect(() => {
         if(!session) return
@@ -46,17 +48,22 @@ export default function Layout({ children }: Props) {
             setShouldShowContent(false)
     }
 
+    function handleFullScreenChange(){
+        setFullScreenOn(fullscreenOn => !fullscreenOn)
+    }
+
     return(
         <div className={styles.layout}>
+            <MdOutlineFullscreenExit className={`${styles.exitFullScreenIcon} ${fullScreenOn ? '' : styles.hidden}`} onClick={handleFullScreenChange}/>
             <div>
-                <Header/>
+                <Header handleFullScreenClick={handleFullScreenChange} className={fullScreenOn ? styles.hidden : ''}/>
                 <main className={styles.main}>
                     { shouldShowContent ?
                         children : <FinishRegister onFinished={() => setShouldShowContent(true)}/>
                     }
                 </main>
             </div>
-            <Footer/>
+            <Footer className={fullScreenOn ? styles.hidden : ''}/>
         </div>
     )
 }

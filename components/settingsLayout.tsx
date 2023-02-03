@@ -6,7 +6,10 @@ type Props = {
 }
 export default function SettingsLayout({ children }: Props){
     const sidebarItems = [
-        ["Ajustes generales", "/settings/general"]
+        {
+            name: "Ajustes generales",
+            link: "/settings/general",
+        }
     ]
 
     return(

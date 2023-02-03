@@ -7,8 +7,9 @@ import Head from 'next/head'
 import { siteTitle } from '../../components/layout'
 import {useSupabaseClient} from "@supabase/auth-helpers-react"
 import { useState } from "react"
-import SendMessageBox from "../../components/sendmessagebox";
-
+import SendMessageBox from "../../components/sendmessagebox"
+import Sidebar from "../../components/sidebar"
+import css from '../../components/groupsId.module.sass'
 type Props = {
     groupName: string,
     oldMessages: Message[],
@@ -50,18 +51,29 @@ export default function GroupPage({ groupName, oldMessages, groupId }: Props){
                 <Head>
                     <title>{webpageTitle}</title>
                 </Head>
-                {
-                    messages.map(
-                        message =>
-                            <Message
-                                key={(Math.random() + 1).toString().substring(7)}
-                                content={message.content}
-                                sentAt={message.sent_at}
-                                userId={message.user_id}
-                            />
-                    )
-                }
-                <SendMessageBox groupId={groupId}/>
+                <div className={css.container}>
+                    <Sidebar items={[
+                        {
+                            name: '#general', link: 'channels/general'
+                        }
+                    ]}/>
+                    <div className={css.messagesContainer}>
+                        {
+                            messages.map(
+                                message =>
+                                    <Message
+                                        key={(Math.random() + 1).toString().substring(7)}
+                                        content={message.content}
+                                        sentAt={message.sent_at}
+                                        userId={message.user_id}
+                                    />
+                            )
+                        }
+                        <div className={css.sendMessageBoxContainer}>
+                        <SendMessageBox groupId={groupId}/>
+                        </div>
+                    </div>
+                </div>
             </>
         </Layout>
     )
@@ -89,8 +101,12 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
             .from('messages')
             .select('*')
             .eq('group_id', id)
+            .order('sent_at', {
+                ascending: false
+            })
+            .limit(5)
         if (error) return null
-        return data
+        return data.reverse()
     }
 
     async function getGroupName() {
